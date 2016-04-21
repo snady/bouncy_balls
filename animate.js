@@ -3,6 +3,7 @@ var ctx = c.getContext("2d");
 
 var start = document.getElementById("start");
 var add = document.getElementById("add");
+var remove = document.getElementById("remove");
 var stop = document.getElementById("stop");
 
 var requestID;
@@ -10,7 +11,7 @@ var requestID;
 ctx.fillStyle = '#FF0000';
 
 function drawBorder(){
-	ctx.strokeRect(0,0,500,500);
+	ctx.strokeRect(0,0,c.width,c.height);
 }
 
 drawBorder();
@@ -20,10 +21,13 @@ BALLS = [];
 var addBall = function(){
 	BALLS.push(new Ball());
 }
+var rmvBall = function(){
+	BALLS.pop();
+}
 
 var Ball = function(){
 	
-	this.rad = Math.floor(Math.random() * 100) + 1; //random radius 1 to 100
+	this.rad = Math.floor(Math.random() * 100) + 3; //random radius 3 to 100
 	this.x = Math.floor((Math.random() * (c.width-2*this.rad))) + this.rad;
 	this.y = Math.floor((Math.random() * (c.height-2*this.rad))) + this.rad;
 	this.xvel = Math.random() * 5 + 1;
@@ -41,8 +45,6 @@ var Ball = function(){
 	}
 
 	this.draw = function(){
-		ctx.clearRect(0,0,500,500);
-		drawBorder();
 		ctx.beginPath();
 		ctx.arc(this.x,this.y,this.rad,0,Math.PI*2);
 		ctx.fill();
@@ -52,8 +54,8 @@ var Ball = function(){
 }
 
 var bounce = function(){
-	if ( BALLS.length == 0 )
-		BALLS.push(new Ball());
+	ctx.clearRect(0,0,c.width,c.height);
+	drawBorder();
 	for ( var i = 0; i < BALLS.length; i++ ){
 		BALLS[i].move();
 		BALLS[i].draw();
@@ -63,6 +65,7 @@ var bounce = function(){
 
 start.addEventListener("click", bounce);
 add.addEventListener("click", addBall);
+remove.addEventListener("click", rmvBall);
 stop.addEventListener("click", function(){
 	stopped = true;
 	window.cancelAnimationFrame( requestID ); //as it works now, once it it stopped it can't be started again 
