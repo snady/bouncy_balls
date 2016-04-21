@@ -16,39 +16,35 @@ function drawBorder(){
 drawBorder();
 
 BALLS = [];
-var stopped = false;
 
 var addBall = function(){
-	BALLS.push(Ball());
+	BALLS.push(new Ball());
 }
 
 var Ball = function(){
 	
 	this.rad = Math.floor(Math.random() * 100) + 1; //random radius 1 to 100
-	this.x = Math.floor((Math.random() * (c.width-rad)));
-	this.y = Math.floor((Math.random() * (c.height-rad)));
-	this.xvel = 2;
-	this.yvel = 2;
+	this.x = Math.floor((Math.random() * (c.width-2*this.rad))) + this.rad;
+	this.y = Math.floor((Math.random() * (c.height-2*this.rad))) + this.rad;
+	this.xvel = Math.random() * 5 + 1;
+	this.yvel = Math.random() * 5 + 1;
 
 	this.move = function(){
-		if( x <= 0 || x >= (500 - rad) ){
-			xvel = -xvel;
+		if( this.x <= this.rad || this.x >= (c.width - this.rad) ){
+			this.xvel = -this.xvel;
 		}
-		if( y <= 0 || y >= (500 - rad) ){
-			yvel = -yvel;
+		if( this.y <= this.rad || this.y >= (c.height - this.rad) ){
+			this.yvel = -this.yvel;
 		}
-		x+=xvel;
-		y+=yvel;
+		this.x+=this.xvel;
+		this.y+=this.yvel;
 	}
 
 	this.draw = function(){
-		if( stopped ){
-			return; //not really efficient but eh
-		}
 		ctx.clearRect(0,0,500,500);
 		drawBorder();
 		ctx.beginPath();
-		ctx.arc(c.width/2,c.height/2,r,0,Math.PI*2);
+		ctx.arc(this.x,this.y,this.rad,0,Math.PI*2);
 		ctx.fill();
 		ctx.closePath();
 		drawBorder(); //draw it again in case the image overlaps the border
@@ -56,11 +52,11 @@ var Ball = function(){
 }
 
 var bounce = function(){
-	while( !stopped ){
-		for ( var i = 0; i < BALLS.length; i++ ){
-			BALLS[i].move();
-			BALLS[i].draw();
-		}
+	if ( BALLS.length == 0 )
+		BALLS.push(new Ball());
+	for ( var i = 0; i < BALLS.length; i++ ){
+		BALLS[i].move();
+		BALLS[i].draw();
 	}
 	requestID = window.requestAnimationFrame(bounce);
 }
