@@ -8,8 +8,6 @@ var stop = document.getElementById("stop");
 
 var requestID;
 
-ctx.fillStyle = '#FF0000';
-
 function drawBorder(){
 	ctx.strokeRect(0,0,c.width,c.height);
 }
@@ -20,6 +18,7 @@ BALLS = [];
 
 var addBall = function(){
 	BALLS.push(new Ball());
+	BALLS[BALLS.length-1].draw();
 }
 var rmvBall = function(){
 	BALLS.pop();
@@ -55,11 +54,11 @@ var Ball = function(){
 	}
 
 	this.collision = function(b){
-		if(Math.sqrt((this.x + b.x)*(this.x + b.x) + (this.y + b.y)*(this.y + b.y)) <= this.rad + b.rad ){
-			this.x = -this.x;
-			this.y = -this.y;
-			b.x = -b.x;
-			b.y = -b.y;
+		if( Math.sqrt((this.x-b.x)*(this.x-b.x) + (this.y-b.y)*(this.y-b.y)) <= this.rad+b.rad ){
+			this.xvel = -this.xvel;
+			this.yvel = -this.yvel;
+			b.xvel = -b.xvel;
+			b.yvel = -b.yvel;
 		}
 	}
 }
@@ -68,7 +67,9 @@ var bounce = function(){
 	ctx.clearRect(0,0,c.width,c.height);
 	drawBorder();
 	for ( var i = 0; i < BALLS.length; i++ ){
-		for( var j = 0; j < BALLS.length; j++ ){
+		for( var j = i+1; j < BALLS.length; j++ ){
+			if( i == j )
+				continue;
 			BALLS[i].collision(BALLS[j]);
 		}
 		BALLS[i].move();
