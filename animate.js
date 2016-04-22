@@ -29,10 +29,22 @@ var Ball = function(){
 	this.rad = Math.floor(Math.random() * 100) + 3; //random radius 3 to 100
 	this.x = Math.floor((Math.random() * (c.width-2*this.rad))) + this.rad;
 	this.y = Math.floor((Math.random() * (c.height-2*this.rad))) + this.rad;
+	this.v = Math.random() * 5 + 1;
+	this.angle = Math.random() * 2 * Math.PI;
+
 	this.xvel = Math.random() * 5 + 1;
 	this.yvel = Math.random() * 5 + 1;
 	this.col = randomColor({hue: 'green'}); //imported a color lib in index.html for pretty colors
 
+	this.move = function(){
+      if( this.x < this.rad || this.x >= c.width - this.rad )
+        this.angle = -this.angle; 
+      if( this.y < this.rad || this.y >= c.height - this.rad )
+        this.angle = -this.angle; 
+      this.x += this.v * Math.cos(this.angle);
+      this.y += this.v * Math.sin(this.angle);
+    }
+    /*
 	this.move = function(){
 		if( this.x <= this.rad || this.x >= (c.width - this.rad) ){
 			this.xvel = -this.xvel;
@@ -43,7 +55,7 @@ var Ball = function(){
 		this.x+=this.xvel;
 		this.y+=this.yvel;
 	}
-
+	*/
 	this.draw = function(){
 		ctx.fillStyle = this.col;
 		ctx.beginPath();
@@ -70,7 +82,7 @@ var bounce = function(){
 		for( var j = i+1; j < BALLS.length; j++ ){
 			if( i == j )
 				continue;
-			BALLS[i].collision(BALLS[j]);
+			//BALLS[i].collision(BALLS[j]);
 		}
 		BALLS[i].move();
 		BALLS[i].draw();
