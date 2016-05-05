@@ -26,7 +26,7 @@ var rmvBall = function(){
 
 var Ball = function(){
 	
-	this.rad = Math.floor(Math.random() * 100) + 3; //random radius 3 to 100
+	this.rad = Math.floor(Math.random() * 50) + 3; //random radius 3 to 100
 	this.x = Math.floor((Math.random() * (c.width-2*this.rad))) + this.rad;
 	this.y = Math.floor((Math.random() * (c.height-2*this.rad))) + this.rad;
 	this.v = Math.random() * 5 + 1;
@@ -68,7 +68,7 @@ var Ball = function(){
 	this.collision = function(b){
 		if( Math.sqrt((this.x-b.x)*(this.x-b.x) + (this.y-b.y)*(this.y-b.y)) <= this.rad+b.rad ){
 			this.angle = this.angle + (Math.random() * (Math.PI/2)) - Math.PI/4 + Math.PI;
-			b.angle = b.angle + (Math.random() * (Math.PI/2)) - Math.PI/4 + Math.PI;
+			b.angle = b.angle + (Math.random() * (Math.PI/2)) - Math.PI/4 + Math.PI; //i should really just do the physics for this instead of being lazy
 		}
 	}
 }
@@ -76,6 +76,7 @@ var Ball = function(){
 var bounce = function(){
 	ctx.clearRect(0,0,c.width,c.height);
 	drawBorder();
+	
 	for ( var i = 0; i < BALLS.length; i++ ){
 		for( var j = i+1; j < BALLS.length; j++ ){
 			if( i == j )
@@ -85,6 +86,19 @@ var bounce = function(){
 		BALLS[i].move();
 		BALLS[i].draw();
 	}
+	/*
+	BALLS.map(function(b){
+		for( var i = 0; i < BALLS.length; i++ ){
+			if( BALLS[i] == b )
+				continue;
+			b.collision(BALLS[i]);
+		}
+	});
+	BALLS.map(function(b){
+		b.move();
+		b.draw();
+	});
+	*/
 	requestID = window.requestAnimationFrame(bounce);
 }
 
