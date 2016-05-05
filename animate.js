@@ -38,7 +38,7 @@ var Ball = function(){
 
 	this.move = function(){
       if( this.x < this.rad || this.x >= c.width - this.rad )
-        this.angle = -this.angle; 
+        this.angle = -this.angle + Math.PI; 
       if( this.y < this.rad || this.y >= c.height - this.rad )
         this.angle = -this.angle; 
       this.x += this.v * Math.cos(this.angle);
@@ -67,10 +67,8 @@ var Ball = function(){
 
 	this.collision = function(b){
 		if( Math.sqrt((this.x-b.x)*(this.x-b.x) + (this.y-b.y)*(this.y-b.y)) <= this.rad+b.rad ){
-			this.xvel = -this.xvel;
-			this.yvel = -this.yvel;
-			b.xvel = -b.xvel;
-			b.yvel = -b.yvel;
+			this.angle = this.angle + (Math.random() * (Math.PI/2)) - Math.PI/4 + Math.PI;
+			b.angle = b.angle + (Math.random() * (Math.PI/2)) - Math.PI/4 + Math.PI;
 		}
 	}
 }
@@ -82,7 +80,7 @@ var bounce = function(){
 		for( var j = i+1; j < BALLS.length; j++ ){
 			if( i == j )
 				continue;
-			//BALLS[i].collision(BALLS[j]);
+			BALLS[i].collision(BALLS[j]);
 		}
 		BALLS[i].move();
 		BALLS[i].draw();
